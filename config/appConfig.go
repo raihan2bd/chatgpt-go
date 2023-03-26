@@ -16,4 +16,5 @@ type Application struct {
 	InfoLog       *log.Logger
 	ErrorLog      *log.Logger
 	TemplateCache map[string]*template.Template
+	InProduction  bool
 }
