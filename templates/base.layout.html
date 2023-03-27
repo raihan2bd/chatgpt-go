@@ -1,0 +1,57 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/css/style.css">
+
+  {{block "css" .}}
+  {{end}}
+
+  {{block "title" .}}
+  {{end}}
+
+</head>
+<body>
+  <header class="header">
+    <nav class="nav-bar">
+      <div class="brand">
+        <button id="menu-btn">
+          <img class="menu-icon" src="/static/images/menu-icon.svg" alt="menu" />
+        </button>
+        <a href="/">
+          <h1 class="brand-title">Neural<span class="text-yellow">Chat</span></h1>
+        </a>
+      </div>
+      <ul class="nav-items">
+        <li class="nav-item">
+          <a href="/" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item">
+          <a href="/chatgpt" class="nav-link">ChatGPT</a>
+        </li>
+        <li class="nav-item">
+          <a href="/login" class="nav-link">Login</a>
+        </li>
+        <li class="nav-item">
+          <a href="/signup" class="nav-link nav__signup">Signup</a>
+        </li>
+      </ul>
+    </nav> 
+  </header>
+
+  <main class="main-container">
+    {{block "content" .}}
+    {{end}}
+  </main>
+
+  <script src="/static/js/app.js"></script>
+
+  {{block "js" .}}
+  {{end}}
+  
+</body>
+</html>
+{{end}}
