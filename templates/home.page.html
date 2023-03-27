@@ -1,0 +1,28 @@
+{{template "base"}}
+
+{{define "css"}}
+  <link rel="stylesheet" href="/static/css/homepage.css">
+{{end}}
+
+{{define "title"}}
+<title>
+  ChatGpt with Golang
+</title>
+{{end}}
+
+{{define "content"}}
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-bg">
+        <img src="/static/images/homepage-bg.jpg" alt="Chat" />
+      </div>
+      <div class="hero-content">
+        <div class="hero-content__row">
+          <h2 class="hero-title">Chat with ChatGPT</h2>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio doloremque provident sequi ipsam, earum et ducimus, illo sapiente, nisi maiores atque. Laborum quas voluptas corrupti! Rerum repudiandae aliquid assumenda id.</p>
+          <a href="/chatgpt" class="hero-btn">Get Stated Now!</a>
+        </div>
+      </div>
+    </div>
+  </section>
+{{end}}

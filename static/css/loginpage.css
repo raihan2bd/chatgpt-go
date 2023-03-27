@@ -1,0 +1,24 @@
+.login-section {
+  padding: 4%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 600px;
+  background: #03339B;
+  color: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+.alternative {
+  text-align: center;
+}
+
+.alternative a {
+  color: #fd0;
+}
+

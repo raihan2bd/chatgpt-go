@@ -1,0 +1,193 @@
+/* Css styles for every page */
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: sans-serif;
+  background: #06205e;
+}
+
+a {
+  text-decoration: none;
+  transition: transform 0.2s ease-in-out;
+  color: #08677e;
+}
+
+a:active {
+  color: #053c49;
+  transform: translateY(-2px);
+}
+
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+button:active {
+  transform: translateY(-2px);
+}
+
+/* css for header */
+
+.header {
+  position: fixed;
+  min-height: 5rem;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(2, 53, 163, 0.89);
+  z-index: 9;
+  padding: 0 4%;
+  display: flex;
+  align-items: center;
+}
+
+.nav-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brand {
+  display: flex;
+  gap: 1rem
+}
+
+#menu-btn {
+  height: 25px;
+  background: transparent;
+  border: none
+}
+
+#menu-btn img{
+  width: 100%;
+  max-height: 100%;
+}
+
+
+.brand-title {
+  color: #fff;
+}
+
+.text-yellow {
+  color: #fddd00;
+}
+
+.nav-items {
+  list-style: none;
+  display: none;
+  flex-direction: column;
+  gap: 1rem;
+  position: fixed;
+  left: 0;
+  top: 5rem;
+  bottom: 0;
+  z-index: 8;
+  background: rgba(6, 32, 94, 0.733);
+  width: 100%;
+  padding: 4%;
+  backdrop-filter: blur(7px);
+}
+
+.show-menu {
+  display: flex;
+}
+
+.nav-item {
+  width: fit-content;
+}
+
+.nav-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  border-radius: 2px;
+  color: #fddd00;
+  cursor: pointer;
+}
+
+.nav__signup {
+  background: #fd0;
+  color: #333;
+  border: 1px solid #fd0;
+}
+
+.nav-link:hover {
+  color: #fff;
+}
+
+.main-container {
+  margin-top: 5rem;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: normal;
+  text-align: center;
+  margin: 1rem 0;
+  color: #fff;
+}
+
+
+/* Css styles for form */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  color: #333;
+  outline-width: 1px;
+}
+
+.input-group label {
+  margin-top: 1rem;
+  text-align: start;
+  font-size: 0.875rem;
+}
+
+.submit-btn {
+  border-radius: 3px;
+  padding: 0.5rem 1.2rem;
+  border: 1px solid #fd0;
+  background: #fd0;
+  color: #053c49;
+  width: fit-content;
+  font-size: 1.2rem;
+  margin: 1rem 0;
+}
+
+.submit-btn:hover, .submit-btn:active {
+  background: transparent;
+  color: #fd0;
+}
+
+/* responsive header css styles */
+@media (min-width: 768px) {
+  .header {
+    background: rgba(2, 82, 255, 0.473);
+  }
+  .nav-items {
+    display: flex;
+    position: static;
+    flex-direction: row;
+    padding: 0;
+    background: transparent;
+    width: fit-content;
+  }
+
+  #menu-btn {
+    display: none;
+  }
+}
+
