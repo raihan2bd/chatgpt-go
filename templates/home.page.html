@@ -1,12 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <h1>Hello From Home Page</h1>
-</body>
-</html>
+{{template "base"}}
+
+{{define "css"}}
+  <link rel="stylesheet" href="/static/css/homepage.css">
+{{end}}
+
+{{define "title"}}
+<title>
+  ChatGpt with Golang
+</title>
+{{end}}
+
+{{define "content"}}
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-bg">
+        <img src="/static/images/homepage-bg.jpg" alt="Chat" />
+      </div>
+      <div class="hero-content">
+        <div class="hero-content__row">
+          <h2 class="hero-title">Chat with ChatGPT</h2>
+          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio doloremque provident sequi ipsam, earum et ducimus, illo sapiente, nisi maiores atque. Laborum quas voluptas corrupti! Rerum repudiandae aliquid assumenda id.</p>
+          <a href="/chatgpt" class="hero-btn">Get Stated Now!</a>
+        </div>
+      </div>
+    </div>
+  </section>
+{{end}}
