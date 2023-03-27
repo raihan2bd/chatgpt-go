@@ -1,5 +1,9 @@
 {{template "base"}}
 
+{{define "css"}}
+<link rel="stylesheet" href="/static/css/loginpage.css">
+{{end}}
+
 {{define "title"}}
 <title>
   Create a new account
@@ -7,5 +11,30 @@
 {{end}}
 
 {{define "content"}}
-<h2>Hello from signup page!</h2>
+<section class="login-section">
+  <div class="login-container">
+    <h3 class="section-title">Create a new account</h3>
+
+    <form id="signup-form" action="/singup" method="post">
+      <div class="input-group">
+        <label for="first_name">First name:</label>
+        <input type="first_name" id="first_name" name="first_name" required placeholder="Enter your first name here" />
+      </div>
+      <div class="input-group">
+        <label for="last_name">Last name:</label>
+        <input type="last_name" id="last_name" name="last_name" required placeholder="Enter your last name here" />
+      </div>
+      <div class="input-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required placeholder="Enter your email here" />
+      </div>
+      <div class="input-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required placeholder="Enter your email here" />
+      </div>
+      <button class="submit-btn" type="submit">Signup</button>
+    </form>
+    <p class="alternative">Already have an account Click here to <a href="/login">Login</a></p>
+  </div>
+</section>
 {{end}}

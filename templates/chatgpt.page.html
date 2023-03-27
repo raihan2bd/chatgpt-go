@@ -1,11 +1,36 @@
 {{template "base"}}
 
+{{define "css"}}
+<link rel="stylesheet" href="/static/css/chatgptpage.css">
+{{end}}
+
 {{define "title"}}
 <title>
-  Chat with ChatGPT
+  Create a new account
 </title>
 {{end}}
 
 {{define "content"}}
-<h2>Hello from chat gpt page!</h2>
+<section class="chat_gpt-section">
+  <div class="chat-container">
+    <h3 class="section-title">Chat with ChatGPT</h3>
+
+    <div class="chat-response">
+      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ea nostrum at tenetur tempore ipsam necessitatibus quibusdam placeat debitis reiciendis non error quod, dolore qui iure nam dolorem suscipit perspiciatis autem? Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem earum soluta eaque blanditiis ipsam velit, placeat asperiores assumenda, libero quae expedita repellat molestiae, deserunt excepturi culpa fugiat tempore aut sed. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquid eveniet sint consequuntur, ex minus tenetur voluptatibus. Quos obcaecati atque cumque temporibus similique mollitia aut exercitationem? Cupiditate ducimus corrupti nulla nostrum? Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex numquam ducimus sapiente aliquam magni necessitatibus iusto totam delectus expedita iste placeat eum animi dolores mollitia, quos architecto porro aperiam eligendi.
+      Quia dolorem debitis nostrum quibusdam, odio similique quas. Corrupti eius excepturi in earum delectus quia. Earum ipsum doloribus saepe, animi deserunt nulla molestiae repellat quos dolor vero tenetur iste tempore?
+      Sequi aperiam nulla quod, possimus nam, non, sapiente voluptatem incidunt quaerat et vel deserunt quibusdam molestias odio atque fugit natus facilis praesentium placeat autem eligendi repudiandae fuga quis ex! Itaque. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Error beatae officia earum dolorem provident modi libero sunt, tenetur veniam ratione distinctio itaque minus aliquam dignissimos quisquam animi architecto omnis illo.
+      Amet labore unde rem delectus, nemo culpa itaque, odit, ipsam consequatur beatae aliquid neque aut totam. Quam, cum quo, fugiat adipisci tempora pariatur tempore libero corrupti recusandae placeat suscipit repudiandae.
+      Quasi asperiores culpa recusandae minus ipsam quod quaerat sed repellat incidunt animi, provident, aspernatur voluptatibus, tempora iusto alias explicabo beatae atque sapiente fugiat ut sequi facilis? Deleniti, alias? Unde, eos?
+      Blanditiis dignissimos nam est quia porro odio? Architecto quisquam quaerat sequi unde, doloremque dignissimos temporibus deleniti natus ipsam repellendus enim voluptate beatae. Sint nulla sit dicta vero quas reprehenderit voluptas.
+      Tenetur veritatis sit nobis modi natus, voluptatibus quidem quod in molestiae, sunt possimus saepe iure laboriosam aperiam delectus voluptates magnam consequatur suscipit deleniti labore quae? Minus quisquam accusamus est maxime.</p>
+    </div>
+
+    <form id="chat_form" class="chat-form" action="" method="post">
+      <div class="input-group">
+        <input type="first_name" id="first_name" name="first_name" required placeholder="Enter Text you want to ask" />
+      </div>
+      <button class="submit-btn" type="submit">Ask</button>
+    </form>
+  </div>
+</section>
 {{end}}
