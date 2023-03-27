@@ -9,6 +9,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/raihan2bd/chatgpt-go/config"
+	"github.com/raihan2bd/chatgpt-go/middlewares"
 	"github.com/raihan2bd/chatgpt-go/render"
 	"github.com/raihan2bd/chatgpt-go/routes"
 )
@@ -45,6 +46,7 @@ func main() {
 	app.TemplateCache = templateCache
 
 	render.NewTemplates(&app)
+	middlewares.NewMiddlewares(&app)
 	srv := &http.Server{
 		Addr:              fmt.Sprintf(":%s", app.Config.Port),
 		Handler:           routes.Routes(),
