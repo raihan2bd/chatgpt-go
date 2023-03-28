@@ -9,6 +9,8 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/raihan2bd/chatgpt-go/config"
+	"github.com/raihan2bd/chatgpt-go/driver"
+	"github.com/raihan2bd/chatgpt-go/handlers"
 	"github.com/raihan2bd/chatgpt-go/middlewares"
 	"github.com/raihan2bd/chatgpt-go/render"
 	"github.com/raihan2bd/chatgpt-go/routes"
@@ -33,6 +35,14 @@ func main() {
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 	errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
+	// connect with postgresql database
+	dsn := os.Getenv("DATABASE_URI")
+	conn, err := driver.ConnectSQL(dsn)
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+	defer conn.Close()
+
 	templateCache, err := render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("cannot create templates cache")
@@ -44,9 +54,13 @@ func main() {
 	app.ErrorLog = errorLog
 	app.InProduction = production
 	app.TemplateCache = templateCache
+	app.DB.DB = conn
 
+	// share data
+	handlers.NewHandlers(&app)
 	render.NewTemplates(&app)
 	middlewares.NewMiddlewares(&app)
+
 	srv := &http.Server{
 		Addr:              fmt.Sprintf(":%s", app.Config.Port),
 		Handler:           routes.Routes(),

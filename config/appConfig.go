@@ -3,6 +3,8 @@ package config
 import (
 	"html/template"
 	"log"
+
+	"github.com/raihan2bd/chatgpt-go/models"
 )
 
 type Config struct {
@@ -17,4 +19,5 @@ type Application struct {
 	ErrorLog      *log.Logger
 	TemplateCache map[string]*template.Template
 	InProduction  bool
+	DB            models.DBModel
 }
