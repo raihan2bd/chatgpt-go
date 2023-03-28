@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"log"
 
+	"github.com/alexedwards/scs/v2"
 	"github.com/raihan2bd/chatgpt-go/models"
 )
 
@@ -20,4 +21,5 @@ type Application struct {
 	TemplateCache map[string]*template.Template
 	InProduction  bool
 	DB            models.DBModel
+	Session       *scs.SessionManager
 }
