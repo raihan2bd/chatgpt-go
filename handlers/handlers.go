@@ -3,12 +3,25 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/raihan2bd/chatgpt-go/config"
 	"github.com/raihan2bd/chatgpt-go/models"
 	"github.com/raihan2bd/chatgpt-go/render"
 )
 
+var app *config.Application
+
+func NewHandlers(a *config.Application) {
+	app = a
+}
+
 // HomeHandler displays home page
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
+	user, err := app.DB.GetUserByID(1)
+	if err != nil {
+		app.ErrorLog.Println(err)
+		return
+	}
+	app.InfoLog.Println(user.FirstName, user.LastName)
 	render.RenderTemplate(w, r, "home.page.html", &models.TemplateData{})
 }
 
