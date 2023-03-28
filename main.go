@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/alexedwards/scs/v2"
 	"github.com/joho/godotenv"
 	"github.com/raihan2bd/chatgpt-go/config"
 	"github.com/raihan2bd/chatgpt-go/driver"
@@ -19,12 +20,11 @@ import (
 var app config.Application
 var port string
 var production bool
+var session *scs.SessionManager
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		panic("No environment variable found!")
-	}
+	// load environment variables file
+	_ = godotenv.Load()
 
 	port = os.Getenv("PORT")
 	if port == "" {
@@ -43,6 +43,14 @@ func main() {
 	}
 	defer conn.Close()
 
+	// initialization session
+	session = scs.New()
+	session.Lifetime = 24 * time.Hour
+	session.Cookie.Persist = true
+	session.Cookie.SameSite = http.SameSiteLaxMode
+	session.Cookie.Secure = app.InProduction
+
+	// create templates cache
 	templateCache, err := render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("cannot create templates cache")
@@ -55,8 +63,9 @@ func main() {
 	app.InProduction = production
 	app.TemplateCache = templateCache
 	app.DB.DB = conn
+	app.Session = session
 
-	// share data
+	// share application data
 	handlers.NewHandlers(&app)
 	render.NewTemplates(&app)
 	middlewares.NewMiddlewares(&app)
