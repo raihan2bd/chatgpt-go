@@ -156,6 +156,14 @@ button:active {
   font-size: 0.875rem;
 }
 
+.invalid-field input {
+  border: 1px solid #fd7272;
+}
+
+.invalid-field .text-danger {
+  color: #fd7272;;
+}
+
 .submit-btn {
   border-radius: 3px;
   padding: 0.5rem 1.2rem;
