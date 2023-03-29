@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/raihan2bd/chatgpt-go/config"
+	"github.com/raihan2bd/chatgpt-go/forms"
 	"github.com/raihan2bd/chatgpt-go/models"
 	"github.com/raihan2bd/chatgpt-go/render"
 	"golang.org/x/crypto/bcrypt"
@@ -33,7 +34,9 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 // SignupHandler displays signup page
 func SignupHandler(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "signup.page.html", &models.TemplateData{})
+	render.RenderTemplate(w, r, "signup.page.html", &models.TemplateData{
+		Form: forms.New(nil),
+	})
 }
 
 // PostSignupHandler create new account and save user credentials to the database
@@ -45,11 +48,31 @@ func PostSignupHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user := models.User{
-		FirstName:   "Jakir",
-		LastName:    "hossen",
-		Email:       "me@r.com",
-		Password:    "123456",
+		FirstName:   r.Form.Get("first_name"),
+		LastName:    r.Form.Get("last_name"),
+		Email:       r.Form.Get("email"),
+		Password:    r.Form.Get("password"),
 		AccessLevel: 1,
+	}
+
+	// validate the form
+	form := forms.New(r.PostForm)
+	form.Required("first_name", "last_name", "email", "password")
+	form.MinLength("first_name", 3)
+	form.MaxLength("first_name", 30)
+	form.MaxLength("last_name", 30)
+	form.IsEmail("email")
+	form.MinLength("password", 6)
+	form.MaxLength("password", 11)
+
+	if !form.Valid() {
+		data := make(map[string]interface{})
+		data["signup_form"] = user
+		render.RenderTemplate(w, r, "signup.page.html", &models.TemplateData{
+			Form: form,
+			Data: data,
+		})
+		return
 	}
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 12)
