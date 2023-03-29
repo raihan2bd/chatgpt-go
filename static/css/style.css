@@ -119,6 +119,11 @@ button:active {
   color: #fff;
 }
 
+.mobile_logout {
+  display: flex;
+  list-style: none;
+}
+
 .main-container {
   margin-top: 5rem;
 }
@@ -192,6 +197,9 @@ button:active {
     padding: 0;
     background: transparent;
     width: fit-content;
+  }
+  .mobile_logout {
+    display: none;
   }
 
   #menu-btn {
