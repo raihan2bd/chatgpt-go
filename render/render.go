@@ -26,7 +26,15 @@ func NewTemplates(a *config.Application) {
 }
 
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
+	td.Flash = app.Session.PopString(r.Context(), "flash")
+	td.Error = app.Session.PopString(r.Context(), "error")
+	td.Warning = app.Session.PopString(r.Context(), "warning")
 	td.CSRFToken = nosurf.Token(r)
+	accessLevel := app.Session.GetInt(r.Context(), "access_level")
+	if app.Session.Exists(r.Context(), "user_id") && accessLevel > 0 {
+		td.IsAuthenticated = 1
+		td.UserRole = accessLevel
+	}
 	return td
 }
 
@@ -39,7 +47,6 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *mod
 		// get the template cache from the app config
 		tc = app.TemplateCache
 	} else {
-
 		tc, _ = CreateTemplateCache()
 	}
 

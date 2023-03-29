@@ -32,12 +32,31 @@
         <li class="nav-item">
           <a href="/chatgpt" class="nav-link">ChatGPT</a>
         </li>
+        {{if eq .IsAuthenticated 1}}
+        <li class="nav-item">
+          <a href="/logout" class="nav-link nav__signup">Logout</a>
+        </li>
+        {{else}}
         <li class="nav-item">
           <a href="/login" class="nav-link">Login</a>
         </li>
         <li class="nav-item">
           <a href="/signup" class="nav-link nav__signup">Signup</a>
         </li>
+        {{end}}
+      </ul>
+
+      <!-- This nav item will show inside mobile view -->
+      <ul class="mobile_logout">
+        {{if eq .IsAuthenticated 1}}
+        <li class="nav-item">
+          <a href="/logout" class="nav-link nav__signup">Logout</a>
+        </li>
+        {{else}}
+        <li class="nav-item">
+          <a href="/login" class="nav-link">Login</a>
+        </li>
+        {{end}}
       </ul>
     </nav> 
   </header>

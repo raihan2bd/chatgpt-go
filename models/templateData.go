@@ -1,5 +1,7 @@
 package models
 
+import "github.com/raihan2bd/chatgpt-go/forms"
+
 // TemplateData sent data from handler to templates
 
 type TemplateData struct {
@@ -12,4 +14,6 @@ type TemplateData struct {
 	Flash           string
 	Error           string
 	IsAuthenticated int
+	Form            *forms.Form
+	UserRole        int
 }

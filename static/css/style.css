@@ -119,6 +119,11 @@ button:active {
   color: #fff;
 }
 
+.mobile_logout {
+  display: flex;
+  list-style: none;
+}
+
 .main-container {
   margin-top: 5rem;
 }
@@ -156,6 +161,14 @@ button:active {
   font-size: 0.875rem;
 }
 
+.invalid-field input {
+  border: 1px solid #fd7272;
+}
+
+.invalid-field .text-danger {
+  color: #fd7272;;
+}
+
 .submit-btn {
   border-radius: 3px;
   padding: 0.5rem 1.2rem;
@@ -184,6 +197,9 @@ button:active {
     padding: 0;
     background: transparent;
     width: fit-content;
+  }
+  .mobile_logout {
+    display: none;
   }
 
   #menu-btn {

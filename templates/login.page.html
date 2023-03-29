@@ -1,4 +1,4 @@
-{{template "base"}}
+{{template "base" .}}
 
 {{define "css"}}
 <link rel="stylesheet" href="/static/css/loginpage.css">
@@ -11,22 +11,40 @@
 {{end}}
 
 {{define "content"}}
+{{$u := index .Data "login_form"}}
 <section class="login-section">
   <div class="login-container">
     <h3 class="section-title">Login With Your Credentials</h3>
+    <p class="form_error{{with .Form.Errors.Get "form_error"}} show-error{{end}}">{{with .Form.Errors.Get "form_error"}}{{.}}{{end}}</p>
+    <form id="login_form" action="/login" method="Post" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ .CSRFToken}}"/>
 
-    <form id="login-form" action="/login" method="post">
       <div class="input-group">
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required placeholder="Enter your email here" />
+        <input type="email" id="email" name="email" required placeholder="Enter your email here" value="{{$u.Email}}" autocomplete="off" />
       </div>
+
       <div class="input-group">
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required placeholder="Enter your email here" />
+        <input type="password" id="password" name="password" required placeholder="Enter your email here" value="{{$u.Password}}" autocomplete="off"/>
       </div>
+
       <button class="submit-btn" type="submit">Login</button>
     </form>
     <p class="alternative">Don't have an account Click here to <a href="/signup">Signup</a></p>
   </div>
 </section>
+{{end}}
+{{define "js"}}
+  <script>
+    const inputGroup = document.querySelectorAll('.input-group input');
+    const errContainer = document.querySelector('.form_error')
+
+    // add event listener to remove error message
+    inputGroup.forEach(elem => elem.addEventListener('keypress', () => {
+      console.log('hi')
+      errContainer.classList.remove('show-error');
+      errContainer.innerText = '';
+    }));
+  </script>
 {{end}}
