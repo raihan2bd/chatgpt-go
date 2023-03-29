@@ -20,6 +20,7 @@ func Routes() http.Handler {
 	router.Post("/login", handlers.PostLoginHandler)
 	router.Get("/signup", handlers.SignupHandler)
 	router.Post("/signup", handlers.PostSignupHandler)
+	router.Get("/logout", handlers.LogoutHandler)
 
 	router.Route("/chatgpt", func(router chi.Router) {
 		router.Use(middlewares.Auth)

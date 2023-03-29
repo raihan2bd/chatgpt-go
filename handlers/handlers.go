@@ -134,6 +134,14 @@ func PostSignupHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/chatgpt", http.StatusSeeOther)
 }
 
+// LogoutHandler logs the user out
+func LogoutHandler(w http.ResponseWriter, r *http.Request) {
+	app.Session.Destroy(r.Context())
+	app.Session.RenewToken(r.Context())
+
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
+}
+
 // SignupHandler displays signup page
 func ChatGptHandler(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, r, "chatgpt.page.html", &models.TemplateData{})
