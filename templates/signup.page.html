@@ -1,4 +1,4 @@
-{{template "base"}}
+{{template "base" .}}
 
 {{define "css"}}
 <link rel="stylesheet" href="/static/css/loginpage.css">
@@ -15,7 +15,8 @@
   <div class="login-container">
     <h3 class="section-title">Create a new account</h3>
 
-    <form id="signup-form" action="/singup" method="post">
+    <form id="signup-form" action="/singup" method="post" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ .CSRFToken}}"/>
       <div class="input-group">
         <label for="first_name">First name:</label>
         <input type="first_name" id="first_name" name="first_name" required placeholder="Enter your first name here" />
