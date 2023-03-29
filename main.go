@@ -8,6 +8,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/alexedwards/scs/postgresstore"
 	"github.com/alexedwards/scs/v2"
 	"github.com/joho/godotenv"
 	"github.com/raihan2bd/chatgpt-go/config"
@@ -48,6 +49,7 @@ func main() {
 	// initialization session
 	gob.Register(map[string]int{})
 	session = scs.New()
+	session.Store = postgresstore.New(conn)
 	session.Lifetime = 24 * time.Hour
 	session.Cookie.Persist = true
 	session.Cookie.SameSite = http.SameSiteLaxMode
