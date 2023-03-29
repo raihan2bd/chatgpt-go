@@ -29,7 +29,59 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 
 // LoginHandler displays login page
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, r, "login.page.html", &models.TemplateData{})
+	render.RenderTemplate(w, r, "login.page.html", &models.TemplateData{
+		Form: forms.New(nil),
+	})
+}
+
+// PostLoginHandler authenticate user
+func PostLoginHandler(w http.ResponseWriter, r *http.Request) {
+	_ = app.Session.RenewToken(r.Context())
+	err := r.ParseForm()
+	form := forms.New(r.PostForm)
+	if err != nil {
+		form.Errors.Add("form_error", "Invalid credentials")
+	}
+
+	var user struct {
+		Email    string
+		Password string
+	}
+
+	user.Email = r.Form.Get("email")
+	user.Password = r.Form.Get("password")
+
+	// validate user input
+	form.Required("email", "password")
+	form.IsEmail("email")
+
+	data := make(map[string]interface{})
+	data["login_form"] = user
+
+	if !form.Valid() {
+		form.Errors.Add("form_error", "Invalid credentials")
+		render.RenderTemplate(w, r, "login.page.html", &models.TemplateData{
+			Form: form,
+			Data: data,
+		})
+		return
+	}
+
+	id, accessLevel, err := app.DB.Authenticate(user.Email, user.Password)
+	if err != nil {
+		form.Errors.Add("form_error", err.Error())
+		render.RenderTemplate(w, r, "login.page.html", &models.TemplateData{
+			Form: form,
+			Data: data,
+		})
+		return
+	}
+
+	app.Session.Put(r.Context(), "user_id", id)
+	app.Session.Put(r.Context(), "access_level", accessLevel)
+	app.Session.Put(r.Context(), "flash", "Logged in successfully!")
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+
 }
 
 // SignupHandler displays signup page
