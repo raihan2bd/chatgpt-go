@@ -15,4 +15,5 @@ type TemplateData struct {
 	Error           string
 	IsAuthenticated int
 	Form            *forms.Form
+	UserRole        int
 }

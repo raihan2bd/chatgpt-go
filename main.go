@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"log"
 	"net/http"
@@ -12,6 +13,7 @@ import (
 	"github.com/raihan2bd/chatgpt-go/config"
 	"github.com/raihan2bd/chatgpt-go/driver"
 	"github.com/raihan2bd/chatgpt-go/handlers"
+	"github.com/raihan2bd/chatgpt-go/helpers"
 	"github.com/raihan2bd/chatgpt-go/middlewares"
 	"github.com/raihan2bd/chatgpt-go/render"
 	"github.com/raihan2bd/chatgpt-go/routes"
@@ -44,11 +46,14 @@ func main() {
 	defer conn.Close()
 
 	// initialization session
+	gob.Register(map[string]int{})
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
 	session.Cookie.Persist = true
 	session.Cookie.SameSite = http.SameSiteLaxMode
 	session.Cookie.Secure = app.InProduction
+
+	app.Session = session
 
 	// create templates cache
 	templateCache, err := render.CreateTemplateCache()
@@ -63,12 +68,12 @@ func main() {
 	app.InProduction = production
 	app.TemplateCache = templateCache
 	app.DB.DB = conn
-	app.Session = session
 
 	// share application data
 	handlers.NewHandlers(&app)
 	render.NewTemplates(&app)
 	middlewares.NewMiddlewares(&app)
+	helpers.NewHelpers(&app)
 
 	srv := &http.Server{
 		Addr:              fmt.Sprintf(":%s", app.Config.Port),
