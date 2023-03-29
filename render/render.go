@@ -27,6 +27,7 @@ func NewTemplates(a *config.Application) {
 
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
 	td.CSRFToken = nosurf.Token(r)
+	td.IsAuthenticated = 1
 	return td
 }
 
@@ -39,7 +40,6 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, td *mod
 		// get the template cache from the app config
 		tc = app.TemplateCache
 	} else {
-
 		tc, _ = CreateTemplateCache()
 	}
 
