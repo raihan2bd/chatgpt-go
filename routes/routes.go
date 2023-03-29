@@ -22,6 +22,7 @@ func Routes() http.Handler {
 	router.Post("/signup", handlers.PostSignupHandler)
 
 	router.Route("/chatgpt", func(router chi.Router) {
+		router.Use(middlewares.Auth)
 		router.Get("/", handlers.ChatGptHandler)
 	})
 
