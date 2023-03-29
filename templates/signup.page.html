@@ -11,28 +11,34 @@
 {{end}}
 
 {{define "content"}}
+{{$u := index .Data "signup_form"}}
 <section class="login-section">
   <div class="login-container">
     <h3 class="section-title">Create a new account</h3>
 
     <form id="signup-form" action="/signup" method="POST" novalidate>
       <input type="hidden" name="csrf_token" value="{{ .CSRFToken}}"/>
-      <div class="input-group">
-        <label for="first_name">First name:</label>
-        <input type="first_name" id="first_name" name="first_name" required placeholder="Enter your first name here" />
+
+      <div class="input-group{{with .Form.Errors.Get "first_name"}} invalid-field{{end}}">
+        <label for="first_name">First Name: {{with .Form.Errors.Get "first_name"}} <span class="text-danger">{{.}}</span>{{end}}</label>
+        <input type="first_name" id="first_name" name="first_name" value="{{$u.FirstName}}" required placeholder="Enter your first name here" />
       </div>
-      <div class="input-group">
-        <label for="last_name">Last name:</label>
-        <input type="last_name" id="last_name" name="last_name" required placeholder="Enter your last name here" />
+
+      <div class="input-group{{with .Form.Errors.Get "last_name"}} invalid-field{{end}}">
+        <label for="last_name">Last Name: {{with .Form.Errors.Get "last_name"}} <span class="text-danger">{{.}}</span>{{end}}</label>
+        <input type="last_name" id="last_name" name="last_name" required placeholder="Enter your last name here" value="{{$u.LastName}}" />
       </div>
-      <div class="input-group">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required placeholder="Enter your email here" />
+
+      <div class="input-group{{with .Form.Errors.Get "email"}} invalid-field{{end}}">
+        <label for="email">Email: {{with .Form.Errors.Get "email"}} <span class="text-danger">{{.}}</span>{{end}}</label>
+        <input type="email" id="email" name="email" required placeholder="Enter your email here" value="{{$u.Email}}" />
       </div>
-      <div class="input-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required placeholder="Enter your email here" />
+
+      <div class="input-group{{with .Form.Errors.Get "password"}} invalid-field{{end}}">
+        <label for="password">Password: {{with .Form.Errors.Get "password"}} <span class="text-danger">{{.}}</span>{{end}}</label>
+        <input type="password" id="password" name="password" required placeholder="Enter your email here" value="{{$u.Password}}" />
       </div>
+
       <button class="submit-btn" type="submit">Signup</button>
     </form>
     <p class="alternative">Already have an account Click here to <a href="/login">Login</a></p>
