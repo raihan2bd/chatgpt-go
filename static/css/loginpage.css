@@ -22,3 +22,14 @@
   color: #fd0;
 }
 
+.form_error {
+  display: none;
+  padding: 1rem;
+  text-align: center;
+  color: #fd7272;
+  font-size: 1rem;
+}
+.show-error {
+  display: block;
+}
+
