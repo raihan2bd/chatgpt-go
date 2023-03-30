@@ -25,6 +25,7 @@ func Routes() http.Handler {
 	router.Route("/chatgpt", func(router chi.Router) {
 		router.Use(middlewares.Auth)
 		router.Get("/", handlers.ChatGptHandler)
+		router.Post("/", handlers.PostChatGptHandler)
 	})
 
 	// Serve static files
