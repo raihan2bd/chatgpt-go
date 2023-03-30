@@ -3,6 +3,7 @@
   background-repeat: no-repeat;
   background-size: cover;
   min-height: calc(100vh - 5rem);
+
 }
 
 .chat-container {
@@ -13,14 +14,13 @@
   backdrop-filter: blur(1px);
   color: #fff;
   position: fixed;
-  z-index: 5;
+  overflow: scroll;
 }
 
 .chat-response {
-  height: calc(100% - 7rem);
-  overflow-y: scroll;
   padding: 1rem;
   background: rgba(3, 51, 155, 0.486);
+  margin-bottom: 5rem;
 }
 
 .chat-form {
@@ -35,9 +35,19 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  height: 4rem;
+}
+
+.chat_textarea {
+  width: 100%;
+  height: fit-content;
+  font-size: 1rem;
 }
 
 .chat-form .submit-btn {
   margin: 0;
+  padding: 0.275rem 1rem;
+}
+
+.chat-form .submit-btn img {
+  max-width: 24px;
 }
