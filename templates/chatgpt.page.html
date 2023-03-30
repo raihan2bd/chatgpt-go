@@ -16,19 +16,45 @@
     <h3 class="section-title">Chat with ChatGPT</h3>
 
     <div class="chat-response">
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ea nostrum at tenetur tempore ipsam necessitatibus quibusdam placeat debitis reiciendis non error quod, dolore qui iure nam dolorem suscipit perspiciatis autem?<br> Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem earum soluta eaque blanditiis ipsam velit, placeat asperiores a<br>ssumenda, libero quae expedita repellat molestiae, deserunt excepturi culpa fugiat tempore aut sed. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquid eveniet sint consequuntur, ex min<br>us tenetur voluptatibus. Quos obcaecati atque cumque temporibus similique mollitia aut exercitationem? Cupiditate ducimus corrupti nulla nostrum? Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex numquam ducimus sapiente aliquam magni necessitatibus iusto totam delectus expedita iste placeat eum animi dolores mollitia, quos architecto porro aperiam eligendi.
-      Quia dolorem debitis nostrum quibusdam, odio similique quas. Corrupti eius excepturi in earum delectus quia. Earum ipsum doloribus saepe, animi deserunt nulla molestiae repellat quos dolor vero tenetur iste tempore?
-      Sequi aperiam nulla quod, possimus nam, non, sapiente voluptatem incidunt quaerat et vel deserunt quibusdam molestias odio atque fugit natus facilis praesentium placeat autem eligendi repudiandae fuga quis ex! Itaque. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Error beatae officia earum dolorem provident modi libero sunt, tenetur veniam ratione distinctio itaque minus aliquam dignissimos quisquam animi architecto omnis illo.
-      Amet labore unde rem delectus, nemo culpa itaque, odit, ipsam consequatur beatae aliquid neque aut totam. Quam, cum quo, fugiat adipisci tem<br>pora pariatur tempore libero corrupti recusandae placeat suscipit repudiandae.
-      Quasi asperiores culpa recusandae minus ipsam quod quaerat sed repellat incidunt animi, provident, aspernatur voluptatibus, tempora iusto alias<br> explicabo beatae atque sapiente fugiat ut sequi facilis? Deleniti, alias? Unde, eos?
-      Blanditiis dignissi<br>mos nam est quia porro odio? Architecto quisquam quaerat sequi unde, doloremque dig<br>nissimos temporibus deleniti natus ipsam repellendus enim voluptate beatae. Sint nulla sit dicta vero quas reprehenderit voluptas.
-      Tenetur veritatis sit nobis modi natus, voluptatibus quidem quod in molestiae, sunt possimus saepe iure laboriosam aperiam delectus voluptates magnam consequatur suscipit deleniti labore quae? Minus quisquam accusamus <br>est maxime.</p>
+      <p id="prompt_response" class="chat_prompt_response">No prompt found! Please add a new one!</p>
     </div>
 
   </div>
-  <form id="chat_form" class="chat-form" action="" method="post">
-      <textarea class="chat_textarea" id="first_name" name="first_name" required placeholder="Enter Text you want to ask"></textarea>
-    <button class="submit-btn" type="submit"><img src="/static/images/send-arrow.svg" alt="Ask"></button>
+  <form id="chat_form" class="chat-form" action="/chatgpt" method="post">
+    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ .CSRFToken}}"/>
+    <textarea row="1" class="chat_textarea" id="chat_prompt" name="chat_prompt" required placeholder="Enter Text you want to ask" required></textarea>
+    <button class="submit-btn" id="chat-submit" type="button"><img src="/static/images/send-arrow.svg" alt="Ask"></button>
   </form>
 </section>
+{{end}}
+{{define "js"}}
+<script>
+  const gptForm = document.getElementById('chat_form');
+  const submitBtn = document.getElementById('chat-submit');
+  const csrfToken = document.getElementById('csrf_token');
+  const chatPrompt = document.getElementById('chat_prompt');
+  const promptResponse = document.getElementById('prompt_response')
+  submitBtn.addEventListener('click', () => {
+    fetch('/chatgpt', {
+      method: "POST",
+      body: JSON.stringify({
+        chat_prompt: chatPrompt
+      }),
+      headers: {
+        "Content-type": "application/json",
+        "X-CSRF-Token": csrf_token.value,
+      }
+    })
+    .then(response => response.json())
+    .then(result => {
+      if (result.error) {
+        promptResponse.classList.add('invalid_prompt')
+        promptResponse.innerText = result.message
+      } else {
+        promptResponse.classList.remove('invalid_prompt')
+        promptResponse.innerText = result.message
+      }
+    });
+  })
+</script>
 {{end}}

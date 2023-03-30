@@ -30,6 +30,11 @@ button:active {
   transform: translateY(-2px);
 }
 
+/* shortcut css */
+.text-center {
+  text-align: center;
+}
+
 /* css for header */
 
 .header {

@@ -23,6 +23,17 @@
   margin-bottom: 5rem;
 }
 
+.chat_prompt_response {
+  min-height: 5rem;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.invalid_prompt {
+  color: #fd7272;
+  font-size: 1.1rem;
+}
+
 .chat-form {
   position: fixed;
   z-index: 5;
@@ -41,6 +52,7 @@
   width: 100%;
   height: fit-content;
   font-size: 1rem;
+  padding: 0.225rem 1rem;
 }
 
 .chat-form .submit-btn {
@@ -51,3 +63,4 @@
 .chat-form .submit-btn img {
   max-width: 24px;
 }
+
