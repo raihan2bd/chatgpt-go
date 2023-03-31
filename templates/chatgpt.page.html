@@ -56,42 +56,44 @@
   }
   
   submitBtn.addEventListener('click', () => {
-    fetch('/chatgpt', {
-      method: "POST",
-      body: JSON.stringify({
-        chat_prompt: chatPrompt.value
-      }),
-      headers: { 
-        "Content-Type": "application/json",
-        "X-CSRF-Token": csrf_token.value,
-        "Accept": "application/json"
-      }
-    })
-    .then(response => response.json())
-    .then(result => {
-      if (result.error) {
-        promptResponseStatus.classList.add('invalid_prompt')
-        promptResponseStatus.innerText = result.message
-      } else {
-        // remove response status
-        promptResponseStatus.classList.remove('invalid_prompt')
-        promptResponseStatus.innerText = ""
+  // create user node for the question
+  const userNode = document.createElement('p');
+  userNode.className="user_res"
+  userNode.innerText = chatPrompt.value
+      
+  // create gpt node for the question
+  const gptNode = document.createElement('p');
+  gptNode.className="gpt_res";
+  gptNode.innerHTML = `<div class="loader"></div>`
+  // append all the nodes
+  promptResponse.append(userNode, gptNode)
 
-        // manipulate response
-        console.log(result.message)
+  fetch('/chatgpt', {
+    method: "POST",
+    body: JSON.stringify({
+      chat_prompt: chatPrompt.value
+    }),
+    headers: { 
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrf_token.value,
+      "Accept": "application/json"
+    }
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.error) {
+      promptResponseStatus.classList.add('invalid_prompt')
+      promptResponseStatus.innerText = result.message
+    } else {
+      // remove response status
+      promptResponseStatus.classList.remove('invalid_prompt')
+      promptResponseStatus.innerText = ""
+      
+      // manipulate response
+      gptNode.innerHTML = convertMarkdownToHtml(result.message)
         
-        // create user node for the question
-        const userNode = document.createElement('p');
-        userNode.className="user_res"
-        userNode.innerText = chatPrompt.value
         
-        // create gpt node for the question
-        const gptNode = document.createElement('p');
-        gptNode.className="gpt_res";
-        gptNode.innerHTML = convertMarkdownToHtml(result.message)
 
-        // append all the nodes
-        promptResponse.append(userNode, gptNode)
       }
     });
   })
