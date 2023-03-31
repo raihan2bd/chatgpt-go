@@ -8,6 +8,7 @@ import (
 
 	"github.com/raihan2bd/chatgpt-go/config"
 	"github.com/raihan2bd/chatgpt-go/forms"
+	"github.com/raihan2bd/chatgpt-go/helpers"
 	"github.com/raihan2bd/chatgpt-go/models"
 	"github.com/raihan2bd/chatgpt-go/render"
 	"github.com/sashabaranov/go-openai"
@@ -153,27 +154,35 @@ func ChatGptHandler(w http.ResponseWriter, r *http.Request) {
 
 // post chatGpt Handler handle post request
 func PostChatGptHandler(w http.ResponseWriter, r *http.Request) {
-	type payload struct {
+	var payload struct {
 		GptPrompt string `json:"chat_prompt"`
 	}
 
-	var p payload
-
-	err := json.NewDecoder(r.Body).Decode(&p)
+	err := json.NewDecoder(r.Body).Decode(&payload)
 
 	var response struct {
 		Error   bool   `json:"error"`
 		Message string `json:"message"`
 	}
 
-	if err != nil || strings.Trim(p.GptPrompt, "") == "" {
-		app.ErrorLog.Println(err)
+	if err != nil {
 		response.Error = true
 		response.Message = "Bad Request"
-		out, _ := json.MarshalIndent(response, "", "\t")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(out)
+		helpers.WriteJSON(w, http.StatusBadRequest, response)
+		return
+	}
+
+	if len(strings.Trim(payload.GptPrompt, "")) < 2 {
+		response.Error = true
+		response.Message = "prompt should be at least 3 characters long!"
+		helpers.WriteJSON(w, http.StatusBadRequest, response)
+		return
+	}
+
+	if len(payload.GptPrompt) > 2000 {
+		response.Error = true
+		response.Message = "prompt should be less than 2000 character long!"
+		helpers.WriteJSON(w, http.StatusBadRequest, response)
 		return
 	}
 
@@ -184,7 +193,7 @@ func PostChatGptHandler(w http.ResponseWriter, r *http.Request) {
 			Messages: []openai.ChatCompletionMessage{
 				{
 					Role:    openai.ChatMessageRoleUser,
-					Content: p.GptPrompt,
+					Content: payload.GptPrompt,
 				},
 			},
 		},
@@ -193,20 +202,11 @@ func PostChatGptHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		response.Error = true
 		response.Message = "Something went wrong! please try it again."
-		out, _ := json.MarshalIndent(response, "", "\t")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(out)
+		helpers.WriteJSON(w, http.StatusInternalServerError, response)
 		return
 	}
 
-	// app.InfoLog.Println(resp.Choices[0].Message.Content)
-
 	response.Error = false
 	response.Message = resp.Choices[0].Message.Content
-
-	out, _ := json.MarshalIndent(response, "", "\t")
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(out)
+	helpers.WriteJSON(w, http.StatusOK, response)
 }
