@@ -20,11 +20,11 @@
 .chat-response {
   padding: 1rem;
   background: rgba(3, 51, 155, 0.486);
+  min-height: 25rem;
   margin-bottom: 5rem;
 }
 
-.chat_prompt_response {
-  min-height: 5rem;
+.chat_prompt_response_status {
   text-align: center;
   font-size: 1rem;
 }
@@ -32,6 +32,56 @@
 .invalid_prompt {
   color: #fd7272;
   font-size: 1.1rem;
+}
+
+.chat_prompt_response {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.user_res, .gpt_res {
+  padding: 1rem;
+  border-radius: 5px;
+  border: 1px solid #757eff;
+}
+
+.user_res {
+  background: transparent;
+}
+
+.gpt_res {
+  background: rgba(3, 51, 155, 0.486);
+  color: #b7b8fd;
+  position: relative;
+}
+
+
+.gpt_res:before{
+content:"";
+position:absolute;
+width:0px;
+height:0px;
+border: 10px solid;
+border-color: transparent transparent #757eff transparent ;
+left: 6px;
+top: -20px;
+}
+
+
+.gpt_res p, .gpt_res pre, .gpt_res ol, .gpt_res ul {
+  margin-bottom: 1rem;
+}
+
+.gpt_res ol, .gpt_res ul {
+  padding: 1rem;
+}
+
+.gpt_res pre {
+  background: rgba(3, 51, 155, 0.486);
+  padding: 1rem;
+  border-radius: 5px;
 }
 
 .chat-form {
@@ -62,5 +112,27 @@
 
 .chat-form .submit-btn img {
   max-width: 24px;
+}
+
+/* overwrite syntax's highlight classes */
+.hljs-deletion,.hljs-number,.hljs-quote,.hljs-selector-class,.hljs-selector-id,.hljs-string,.hljs-template-tag,.hljs-type {
+  color: #04e72a;
+}
+
+.hljs-section,.hljs-title {
+  color: #ff6565;
+  font-weight: 700
+}
+
+.hljs-keyword {
+  color: #0775ff;
+}
+
+.hljs-addition,.hljs-built_in,.hljs-bullet,.hljs-code {
+  color: #ffde3e;
+}
+
+.hljs-punctuation, .hljs-tag {
+  color: #fdfdfd;
 }
 
