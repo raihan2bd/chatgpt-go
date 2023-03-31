@@ -11,6 +11,7 @@ import (
 func Routes() http.Handler {
 	// Initialize the router
 	router := chi.NewRouter()
+
 	router.Use(middlewares.NoSurf)
 	router.Use(middlewares.SessionLoad)
 
