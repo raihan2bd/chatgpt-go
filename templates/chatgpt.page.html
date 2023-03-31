@@ -15,17 +15,18 @@
 <section class="chat_gpt-section">
   <div class="chat-container">
     <h3 class="section-title">Chat with ChatGPT</h3>
-
     <div class="chat-response">
-      <p id="prompt_response_status" class="chat_prompt_response_status">No prompt found! Please add a new one!</p>
+      <p class="chat_response_status text-center">No prompt found! Please add a new one!</p>
       <div id="prompt_response" class="chat_prompt_response"></div>
     </div>
 
   </div>
-  <form id="chat_form" class="chat-form" action="/chatgpt" method="post">
+  <form id="chat_form" class="chat-form" action="" method="post">
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ .CSRFToken}}"/>
-    <textarea row="1" class="chat_textarea" id="chat_prompt" name="chat_prompt" required placeholder="Enter Text you want to ask" required></textarea>
-    <button class="submit-btn" id="chat-submit" type="button"><img src="/static/images/send-arrow.svg" alt="Ask"></button>
+    <div class="input-group">
+      <textarea row="1" class="chat_textarea" id="chat_prompt" name="chat_prompt" required placeholder="Enter prompt text in between 1/2000" required maxlength="2000"></textarea>
+    </div>
+    <button disabled class="submit-btn" id="chat-submit" type="button"><img src="/static/images/send-arrow.svg" alt="Ask"></button>
   </form>
 </section>
 {{end}}
@@ -38,7 +39,7 @@
   const submitBtn = document.getElementById('chat-submit');
   const csrfToken = document.getElementById('csrf_token');
   const chatPrompt = document.getElementById('chat_prompt');
-  const promptResponseStatus = document.getElementById('prompt_response_status');
+  const promptResponseStatus = document.querySelector('.chat_response_status');
   const promptResponse = document.getElementById('prompt_response');
 
   const convertMarkdownToHtml = (markdownInput) => {
@@ -50,12 +51,13 @@
           return hljs.highlightAuto(code).value;
         }
       }
-});
+    });
     const htmlOutput = marked.parse(markdownInput);
     return htmlOutput;
   }
-  
-  submitBtn.addEventListener('click', () => {
+
+  const sendRequestToGPT = () => {
+  promptResponseStatus.classList.add('d-none');
   // create user node for the question
   const userNode = document.createElement('p');
   userNode.className="user_res"
@@ -64,7 +66,7 @@
   // create gpt node for the question
   const gptNode = document.createElement('p');
   gptNode.className="gpt_res";
-  gptNode.innerHTML = `<div class="loader"></div>`
+  gptNode.innerHTML = `<div class="loader"></div>`;
   // append all the nodes
   promptResponse.append(userNode, gptNode)
 
@@ -82,20 +84,35 @@
   .then(response => response.json())
   .then(result => {
     if (result.error) {
-      promptResponseStatus.classList.add('invalid_prompt')
-      promptResponseStatus.innerText = result.message
+      gptNode.classList.add('invalid_prompt')
+      gptNode.innerHTML = result.message
     } else {
       // remove response status
-      promptResponseStatus.classList.remove('invalid_prompt')
-      promptResponseStatus.innerText = ""
+      gptNode.classList.remove('invalid_prompt')
       
       // manipulate response
       gptNode.innerHTML = convertMarkdownToHtml(result.message)
         
-        
-
       }
     });
-  })
+  }
+
+    // submit chat prompt on keypress
+  chatPrompt.addEventListener('keyup', (e) => {
+    const promptValue = e.target.value;
+    if (e.target.value.trim().length > 0) {
+      submitBtn.removeAttribute('disabled');
+    } else {
+      submitBtn.setAttribute('disabled', '');
+    }
+  });
+  
+  // submit chat prompt on button click
+  submitBtn.addEventListener('click', () => {
+  if(chatPrompt.value.trim().length == 0) {
+    return
+  }
+  sendRequestToGPT();
+  });
 </script>
 {{end}}

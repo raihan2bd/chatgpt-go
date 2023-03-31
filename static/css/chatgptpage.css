@@ -29,11 +29,6 @@
   font-size: 1rem;
 }
 
-.invalid_prompt {
-  color: #fd7272;
-  font-size: 1.1rem;
-}
-
 .chat_prompt_response {
   padding: 1rem;
   display: flex;
@@ -84,6 +79,11 @@ top: -20px;
   border-radius: 5px;
 }
 
+.invalid_prompt {
+  color: #fd7272;
+  font-size: 1.1rem;
+}
+
 .chat-form {
   position: fixed;
   z-index: 5;
@@ -112,6 +112,14 @@ top: -20px;
 
 .chat-form .submit-btn img {
   max-width: 24px;
+}
+
+.submit-btn:disabled,
+.submit-btn[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
 }
 
 /* overwrite syntax's highlight classes */
