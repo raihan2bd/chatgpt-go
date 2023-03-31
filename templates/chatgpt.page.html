@@ -1,6 +1,7 @@
 {{template "base" .}}
 
 {{define "css"}}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
 <link rel="stylesheet" href="/static/css/chatgptpage.css">
 {{end}}
 
@@ -14,23 +15,104 @@
 <section class="chat_gpt-section">
   <div class="chat-container">
     <h3 class="section-title">Chat with ChatGPT</h3>
-
     <div class="chat-response">
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ea nostrum at tenetur tempore ipsam necessitatibus quibusdam placeat debitis reiciendis non error quod, dolore qui iure nam dolorem suscipit perspiciatis autem? Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem earum soluta eaque blanditiis ipsam velit, placeat asperiores assumenda, libero quae expedita repellat molestiae, deserunt excepturi culpa fugiat tempore aut sed. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquid eveniet sint consequuntur, ex minus tenetur voluptatibus. Quos obcaecati atque cumque temporibus similique mollitia aut exercitationem? Cupiditate ducimus corrupti nulla nostrum? Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex numquam ducimus sapiente aliquam magni necessitatibus iusto totam delectus expedita iste placeat eum animi dolores mollitia, quos architecto porro aperiam eligendi.
-      Quia dolorem debitis nostrum quibusdam, odio similique quas. Corrupti eius excepturi in earum delectus quia. Earum ipsum doloribus saepe, animi deserunt nulla molestiae repellat quos dolor vero tenetur iste tempore?
-      Sequi aperiam nulla quod, possimus nam, non, sapiente voluptatem incidunt quaerat et vel deserunt quibusdam molestias odio atque fugit natus facilis praesentium placeat autem eligendi repudiandae fuga quis ex! Itaque. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Error beatae officia earum dolorem provident modi libero sunt, tenetur veniam ratione distinctio itaque minus aliquam dignissimos quisquam animi architecto omnis illo.
-      Amet labore unde rem delectus, nemo culpa itaque, odit, ipsam consequatur beatae aliquid neque aut totam. Quam, cum quo, fugiat adipisci tempora pariatur tempore libero corrupti recusandae placeat suscipit repudiandae.
-      Quasi asperiores culpa recusandae minus ipsam quod quaerat sed repellat incidunt animi, provident, aspernatur voluptatibus, tempora iusto alias explicabo beatae atque sapiente fugiat ut sequi facilis? Deleniti, alias? Unde, eos?
-      Blanditiis dignissimos nam est quia porro odio? Architecto quisquam quaerat sequi unde, doloremque dignissimos temporibus deleniti natus ipsam repellendus enim voluptate beatae. Sint nulla sit dicta vero quas reprehenderit voluptas.
-      Tenetur veritatis sit nobis modi natus, voluptatibus quidem quod in molestiae, sunt possimus saepe iure laboriosam aperiam delectus voluptates magnam consequatur suscipit deleniti labore quae? Minus quisquam accusamus est maxime.</p>
+      <p class="chat_response_status text-center">No prompt found! Please add a new one!</p>
+      <div id="prompt_response" class="chat_prompt_response"></div>
     </div>
 
-    <form id="chat_form" class="chat-form" action="" method="post">
-      <div class="input-group">
-        <input type="first_name" id="first_name" name="first_name" required placeholder="Enter Text you want to ask" />
-      </div>
-      <button class="submit-btn" type="submit">Ask</button>
-    </form>
   </div>
+  <form id="chat_form" class="chat-form" action="" method="post">
+    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ .CSRFToken}}"/>
+    <div class="input-group">
+      <textarea row="1" class="chat_textarea" id="chat_prompt" name="chat_prompt" required placeholder="Enter prompt text in between 1/2000" required maxlength="2000"></textarea>
+    </div>
+    <button disabled class="submit-btn" id="chat-submit" type="button"><img src="/static/images/send-arrow.svg" alt="Ask"></button>
+  </form>
 </section>
+{{end}}
+{{define "js"}}
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
+<script>
+  const gptForm = document.getElementById('chat_form');
+  const submitBtn = document.getElementById('chat-submit');
+  const csrfToken = document.getElementById('csrf_token');
+  const chatPrompt = document.getElementById('chat_prompt');
+  const promptResponseStatus = document.querySelector('.chat_response_status');
+  const promptResponse = document.getElementById('prompt_response');
+
+  const convertMarkdownToHtml = (markdownInput) => {
+    marked.setOptions({
+    highlight: function (code, lang) {
+        if (lang) {
+          return hljs.highlight(lang, code).value;
+        } else {
+          return hljs.highlightAuto(code).value;
+        }
+      }
+    });
+    const htmlOutput = marked.parse(markdownInput);
+    return htmlOutput;
+  }
+
+  const sendRequestToGPT = () => {
+  promptResponseStatus.classList.add('d-none');
+  // create user node for the question
+  const userNode = document.createElement('p');
+  userNode.className="user_res"
+  userNode.innerText = chatPrompt.value
+      
+  // create gpt node for the question
+  const gptNode = document.createElement('p');
+  gptNode.className="gpt_res";
+  gptNode.innerHTML = `<div class="loader"></div>`;
+  // append all the nodes
+  promptResponse.append(userNode, gptNode)
+
+  fetch('/chatgpt', {
+    method: "POST",
+    body: JSON.stringify({
+      chat_prompt: chatPrompt.value
+    }),
+    headers: { 
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrf_token.value,
+      "Accept": "application/json"
+    }
+  })
+  .then(response => response.json())
+  .then(result => {
+    if (result.error) {
+      gptNode.classList.add('invalid_prompt')
+      gptNode.innerHTML = result.message
+    } else {
+      // remove response status
+      gptNode.classList.remove('invalid_prompt')
+      
+      // manipulate response
+      gptNode.innerHTML = convertMarkdownToHtml(result.message)
+        
+      }
+    });
+  }
+
+    // submit chat prompt on keypress
+  chatPrompt.addEventListener('keyup', (e) => {
+    const promptValue = e.target.value;
+    if (e.target.value.trim().length > 2) {
+      submitBtn.removeAttribute('disabled');
+    } else {
+      submitBtn.setAttribute('disabled', '');
+    }
+  });
+  
+  // submit chat prompt on button click
+  submitBtn.addEventListener('click', () => {
+  if(chatPrompt.value.trim().length == 0) {
+    return
+  }
+  sendRequestToGPT();
+  });
+</script>
 {{end}}

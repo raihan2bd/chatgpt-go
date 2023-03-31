@@ -18,6 +18,7 @@ import (
 	"github.com/raihan2bd/chatgpt-go/middlewares"
 	"github.com/raihan2bd/chatgpt-go/render"
 	"github.com/raihan2bd/chatgpt-go/routes"
+	"github.com/sashabaranov/go-openai"
 )
 
 var app config.Application
@@ -46,8 +47,13 @@ func main() {
 	}
 	defer conn.Close()
 
+	// open ai secret
+	openAIKey := os.Getenv("OPEN_AI_KEY")
+	app.Config.OpenAIKey = openAIKey
+
 	// initialization session
 	gob.Register(map[string]int{})
+	app.OpenAIClients = openai.NewClient(app.Config.OpenAIKey)
 	session = scs.New()
 	session.Store = postgresstore.New(conn)
 	session.Lifetime = 24 * time.Hour
@@ -78,12 +84,12 @@ func main() {
 	helpers.NewHelpers(&app)
 
 	srv := &http.Server{
-		Addr:              fmt.Sprintf(":%s", app.Config.Port),
-		Handler:           routes.Routes(),
-		IdleTimeout:       30 * time.Second,
-		ReadTimeout:       10 * time.Second,
-		ReadHeaderTimeout: 5 * time.Second,
-		WriteTimeout:      5 * time.Second,
+		Addr:    fmt.Sprintf(":%s", app.Config.Port),
+		Handler: routes.Routes(),
+		// IdleTimeout:       30 * time.Second,
+		// ReadTimeout:       10 * time.Second,
+		// ReadHeaderTimeout: 5 * time.Second,
+		// WriteTimeout:      5 * time.Second,
 	}
 
 	app.InfoLog.Printf("Starting HTTP server on port %s\n", app.Config.Port)

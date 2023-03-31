@@ -6,12 +6,13 @@ import (
 
 	"github.com/alexedwards/scs/v2"
 	"github.com/raihan2bd/chatgpt-go/models"
+	"github.com/sashabaranov/go-openai"
 )
 
 type Config struct {
-	Port   string
-	DSN    string
-	GPTKey string
+	Port      string
+	DSN       string
+	OpenAIKey string
 }
 
 type Application struct {
@@ -22,4 +23,5 @@ type Application struct {
 	InProduction  bool
 	DB            models.DBModel
 	Session       *scs.SessionManager
+	OpenAIClients *openai.Client
 }

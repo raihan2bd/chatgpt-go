@@ -1,12 +1,17 @@
 package handlers
 
 import (
+	"context"
+	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/raihan2bd/chatgpt-go/config"
 	"github.com/raihan2bd/chatgpt-go/forms"
+	"github.com/raihan2bd/chatgpt-go/helpers"
 	"github.com/raihan2bd/chatgpt-go/models"
 	"github.com/raihan2bd/chatgpt-go/render"
+	"github.com/sashabaranov/go-openai"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -145,4 +150,63 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 // SignupHandler displays signup page
 func ChatGptHandler(w http.ResponseWriter, r *http.Request) {
 	render.RenderTemplate(w, r, "chatgpt.page.html", &models.TemplateData{})
+}
+
+// post chatGpt Handler handle post request
+func PostChatGptHandler(w http.ResponseWriter, r *http.Request) {
+	var payload struct {
+		GptPrompt string `json:"chat_prompt"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&payload)
+
+	var response struct {
+		Error   bool   `json:"error"`
+		Message string `json:"message"`
+	}
+
+	if err != nil {
+		response.Error = true
+		response.Message = "Bad Request"
+		helpers.WriteJSON(w, http.StatusBadRequest, response)
+		return
+	}
+
+	if len(strings.Trim(payload.GptPrompt, "")) < 2 {
+		response.Error = true
+		response.Message = "prompt should be at least 3 characters long!"
+		helpers.WriteJSON(w, http.StatusBadRequest, response)
+		return
+	}
+
+	if len(payload.GptPrompt) > 2000 {
+		response.Error = true
+		response.Message = "prompt should be less than 2000 character long!"
+		helpers.WriteJSON(w, http.StatusBadRequest, response)
+		return
+	}
+
+	resp, err := app.OpenAIClients.CreateChatCompletion(
+		context.Background(),
+		openai.ChatCompletionRequest{
+			Model: openai.GPT3Dot5Turbo,
+			Messages: []openai.ChatCompletionMessage{
+				{
+					Role:    openai.ChatMessageRoleUser,
+					Content: payload.GptPrompt,
+				},
+			},
+		},
+	)
+
+	if err != nil {
+		response.Error = true
+		response.Message = "Something went wrong! please try it again."
+		helpers.WriteJSON(w, http.StatusInternalServerError, response)
+		return
+	}
+
+	response.Error = false
+	response.Message = resp.Choices[0].Message.Content
+	helpers.WriteJSON(w, http.StatusOK, response)
 }
