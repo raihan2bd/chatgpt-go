@@ -1,6 +1,7 @@
 {{template "base" .}}
 
 {{define "css"}}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
 <link rel="stylesheet" href="/static/css/chatgptpage.css">
 {{end}}
 
@@ -16,7 +17,8 @@
     <h3 class="section-title">Chat with ChatGPT</h3>
 
     <div class="chat-response">
-      <p id="prompt_response" class="chat_prompt_response">No prompt found! Please add a new one!</p>
+      <p id="prompt_response_status" class="chat_prompt_response_status">No prompt found! Please add a new one!</p>
+      <div id="prompt_response" class="chat_prompt_response"></div>
     </div>
 
   </div>
@@ -28,31 +30,68 @@
 </section>
 {{end}}
 {{define "js"}}
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+
 <script>
   const gptForm = document.getElementById('chat_form');
   const submitBtn = document.getElementById('chat-submit');
   const csrfToken = document.getElementById('csrf_token');
   const chatPrompt = document.getElementById('chat_prompt');
-  const promptResponse = document.getElementById('prompt_response')
+  const promptResponseStatus = document.getElementById('prompt_response_status');
+  const promptResponse = document.getElementById('prompt_response');
+
+  const convertMarkdownToHtml = (markdownInput) => {
+    marked.setOptions({
+    highlight: function (code, lang) {
+        if (lang) {
+          return hljs.highlight(lang, code).value;
+        } else {
+          return hljs.highlightAuto(code).value;
+        }
+      }
+});
+    const htmlOutput = marked.parse(markdownInput);
+    return htmlOutput;
+  }
+  
   submitBtn.addEventListener('click', () => {
     fetch('/chatgpt', {
       method: "POST",
       body: JSON.stringify({
-        chat_prompt: chatPrompt
+        chat_prompt: chatPrompt.value
       }),
-      headers: {
-        "Content-type": "application/json",
+      headers: { 
+        "Content-Type": "application/json",
         "X-CSRF-Token": csrf_token.value,
+        "Accept": "application/json"
       }
     })
     .then(response => response.json())
     .then(result => {
       if (result.error) {
-        promptResponse.classList.add('invalid_prompt')
-        promptResponse.innerText = result.message
+        promptResponseStatus.classList.add('invalid_prompt')
+        promptResponseStatus.innerText = result.message
       } else {
-        promptResponse.classList.remove('invalid_prompt')
-        promptResponse.innerText = result.message
+        // remove response status
+        promptResponseStatus.classList.remove('invalid_prompt')
+        promptResponseStatus.innerText = ""
+
+        // manipulate response
+        console.log(result.message)
+        
+        // create user node for the question
+        const userNode = document.createElement('p');
+        userNode.className="user_res"
+        userNode.innerText = chatPrompt.value
+        
+        // create gpt node for the question
+        const gptNode = document.createElement('p');
+        gptNode.className="gpt_res";
+        gptNode.innerHTML = convertMarkdownToHtml(result.message)
+
+        // append all the nodes
+        promptResponse.append(userNode, gptNode)
       }
     });
   })
