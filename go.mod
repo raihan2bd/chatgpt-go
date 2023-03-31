@@ -15,9 +15,11 @@ require (
 require (
 	github.com/alexedwards/scs/pgxstore v0.0.0-20230327161757-10d4299e3b24 // indirect
 	github.com/alexedwards/scs/postgresstore v0.0.0-20230327161757-10d4299e3b24 // indirect
+	github.com/go-chi/cors v1.2.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/jackc/puddle/v2 v2.2.0 // indirect
+	github.com/sashabaranov/go-openai v1.5.7 // indirect
 	github.com/stretchr/testify v1.8.2 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
