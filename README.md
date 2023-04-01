@@ -30,7 +30,12 @@ I used Go (golang), PostgreSQL, OpenAI, Html, Javascript and CSS to build this p
   </ul>
 
 ## Demo
+![Capture_home](https://user-images.githubusercontent.com/35267447/229288848-3b920169-b580-4121-b0c6-cc431bb12fc6.PNG)
 
+![Capture](https://user-images.githubusercontent.com/35267447/229288865-4947e6e6-bfce-4328-8c03-f0a37f542039.PNG)
+
+![Capture_home_m](https://user-images.githubusercontent.com/35267447/229288832-b06b36aa-6b4d-432f-87a3-86bf4676005f.PNG)
+![Capture-m](https://user-images.githubusercontent.com/35267447/229288895-d0b898ca-5470-47af-9e48-b7644e10c665.PNG)
 
 
 
@@ -46,7 +51,7 @@ https://github.com/raihan2bd/chatgpt-go.git
 go mod tidy
 ```
 - After downloading the packages you should rename example.database.yml file name to database.yml file and edit database credentials to your own database information.
-![Capture5](https://user-images.githubusercontent.com/35267447/223344475-c64994c5-8a73-44d7-a571-5d3247c8db74.PNG)
+![Capture](https://user-images.githubusercontent.com/35267447/229288804-fc4769a8-6e29-4c0b-b2fa-750d27fda43b.PNG)
 - Make sure you rename example.env file to .env file and modify it with your credentials.
 
 
