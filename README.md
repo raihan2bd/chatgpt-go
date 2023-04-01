@@ -46,13 +46,37 @@ https://github.com/raihan2bd/chatgpt-go.git
 ```
 - Then Make sure you have install [Go (golang)](https://go.dev/dl/) version 1.8.0 or latest stable version.
 - Then make sure you have install [PostgreSQL](https://www.postgresql.org/) on your local machine if you want to use this project as locally.
+- Then Create a database called `chatgpt` inside the database create two table with below command ⬇️
+
+```sql
+ CREATE TABLE public.users (
+	id serial4 NOT NULL,
+	first_name varchar(50) NOT NULL,
+	last_name varchar(50) NOT NULL,
+	email varchar(255) NOT NULL,
+	"password" varchar(60) NOT NULL,
+	created_at timestamp NOT NULL,
+	updated_at timestamp NOT NULL,
+	access_level int4 NULL DEFAULT 1,
+	CONSTRAINT users_email_key UNIQUE (email),
+	CONSTRAINT users_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE sessions (
+	token TEXT PRIMARY KEY,
+	data BYTEA NOT NULL,
+	expiry TIMESTAMPTZ NOT NULL
+);
+
+CREATE INDEX sessions_expiry_idx ON sessions (expiry);
+```
 - To install all the Go packages navigate the folder address on your terminal and enter the below command ⬇️
 ``` bash
 go mod tidy
 ```
-- After downloading the packages you should rename example.database.yml file name to database.yml file and edit database credentials to your own database information.
+
 ![Capture](https://user-images.githubusercontent.com/35267447/229288804-fc4769a8-6e29-4c0b-b2fa-750d27fda43b.PNG)
-- Make sure you rename example.env file to .env file and modify it with your credentials.
+- Make sure you rename `example.env` file to `.env` file and modify it with your database credentials (you created earlier) and other info too.
 
 
 # Usages
